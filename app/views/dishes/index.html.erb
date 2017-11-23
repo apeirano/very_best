@@ -109,17 +109,30 @@
         <tr>
           <td><%= dish.name %></td>
           <td> 
-             <%= select_tag(:venue_id, options_from_collection_for_select(Venue.order("name ASC"), :id, :name), :class => "form-control") %>
+          
+          <form action="/create_bookmark" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+              <!-- Drop down venues -->
+              <%= select_tag(:venue_id, options_from_collection_for_select(Venue.all, :id, :name, @bookmark.venue_id), :class => "form-control") %>
+
+              <!-- Hidden Dish -->
+              <input type="hidden" name="dish_id" value="<%= dish.id %>">
+
+              <!-- Label and input for user_id -->
+              <input type="hidden" name="user_id" value="<%= current_user.id %>">
+
               <button class="btn btn-primary btn-sm">
-                  <i class="fa fa-heart"></i>
+                <i class="fa fa-heart"></i>
               </button>
+            </form>
+          
           
           </td>
           <td>
             <% if dish.cuisine.present? %>
-              <a href="/cuisines/<%= dish.cuisine.id %>">
-                <%= dish.cuisine.name %>
-              </a>
+              <%= dish.cuisine.name %>
             <% end %>
           </td>
         </tr>
