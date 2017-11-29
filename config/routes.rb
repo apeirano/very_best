@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
 
+  # Routes for the Dishes resource:
+
+  get "/dish", :controller => "dishes", :action => "new"
+
+
+
+
 # Home Page
   root :to => "dishes#index"
 
