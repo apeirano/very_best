@@ -6,6 +6,8 @@ class VenuesController < ApplicationController
       marker.lat venue.address_latitude
       marker.lng venue.address_longitude
       marker.infowindow "<h5><a href='/venues/#{venue.id}'>#{venue.created_at}</a></h5><small>#{venue.address_formatted_address}</small>"
+  @user_bookmarks = Bookmark.where(:user_id => current_user.id)
+  
     end
 
     render("venues/index.html.erb")
