@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
 
+  # Routes for the Dishes resource:
+
+
+
+
 # Home Page
   root :to => "dishes#index"
 
