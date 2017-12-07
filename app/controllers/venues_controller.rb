@@ -14,6 +14,7 @@ class VenuesController < ApplicationController
   def show
     @bookmark = Bookmark.new
     @venue = Venue.find(params[:id])
+    @user_bookmarks = Bookmark.where(:user_id => current_user.id).where(:venue_id => @venue.id)
 
     render("venues/show.html.erb")
   end
