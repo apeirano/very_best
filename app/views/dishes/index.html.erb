@@ -1,6 +1,7 @@
+<div class="container">
 
-<div id="left_panel"  style="float:left; width:250px;">
-    
+<div class="col-md-3">
+
     <div class="row mb-1">
       <div class="col-md-12">
         <%= search_form_for @q, :class => "collapse", :id => "dishes_filters" do |f| %>
@@ -12,11 +13,16 @@
     </div>  
 
     <div class="form-group">
+      <p>
+       <label> Cuisine </label>
+      </p>  
       <% Cuisine.all.each do |cuisine| %>
+        <div>
         <label>
           <%= check_box_tag('q[cuisine_id_eq_any][]', cuisine.id, (true if @q.cuisine_id_eq_any.try(:include?, cuisine.id))) %>
           <%= cuisine.name %>
         </label>
+        </div>
       <% end %>
     </div>
 
@@ -32,10 +38,12 @@
     
 </div>
 
-<div id="contents"    style="float:left; width:600px;">
+<div class="col-md-6">
 
   <div class="row">
     <div class="col-md-12">
+    
+    <div class="panel panel-default">
       <table class="table table-striped table-hover">
         <tr>
           <th>The very best...</th>
@@ -50,32 +58,45 @@
             </a>
           
           </td>
-          <td> 
-          
-        <form action="/create_bookmark" method="post">
-              <!-- Hidden input for authenticity token to protect from forgery -->
-              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-              <!-- Drop down venues -->
-              <%= select_tag(:venue_id, options_from_collection_for_select(Venue.all, :id, :name, @bookmark.venue_id), :class => "form-control") %>
-
-              <!-- Hidden Dish -->
-              <input type="hidden" name="dish_id" value="<%= dish.id %>">
-
-              <!-- Label and input for user_id -->
-              <input type="hidden" name="user_id" value="<%= current_user.id %>">
-
-              <button class="btn btn-primary btn-sm">
-                <i class="fa fa-heart"></i>
-              </button>
-            </form>
-          
-          
-          </td>
-          <td>
+        <!-- I include an if to show only the drop down venue when the dish has not a favorite restaurant -->
+        
+        <% if Bookmark.where(:dish_id => dish.id).where(:user_id => current_user.id ).present? %>
+        
+            <td> <%= Venue.where(:id => (Bookmark.where(:dish_id => dish.id).where(:user_id => current_user.id ).last.venue_id)).last.name  %>  </td>
+            
+        <% else %>
+        
+            <td> 
+            
+            <form action="/create_bookmark" method="post">
+                  <!-- Hidden input for authenticity token to protect from forgery -->
+                  <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+    
+                  <!-- Drop down venues -->
+                  <%= select_tag(:venue_id, options_from_collection_for_select(Venue.all, :id, :name, @bookmark.venue_id), :class => "form-control") %>
+    
+                  <!-- Hidden Dish -->
+                  <input type="hidden" name="dish_id" value="<%= dish.id %>">
+    
+                  <!-- Label and input for user_id -->
+                  <input type="hidden" name="user_id" value="<%= current_user.id %>">
+            
+                  <button class="btn btn-primary btn-sm">
+                    <i class="fa fa-heart"></i>
+                  </button>
+                 
+                </form>
+            </td>
+            
+            
+            <% end %>
+            
+              <td>
+            <span class="label label-primary">
             <% if dish.cuisine.present? %>
               <%= dish.cuisine.name %>
             <% end %>
+            </span>
           </td>
         </tr>
         <% end %>
@@ -83,13 +104,14 @@
       <%= paginate @dishes, theme: 'twitter-bootstrap-4' %>
     </div>
   </div>
-
+</div>
 
 </div>
 
-  <div id="right_panel" style="float:left; width:100px;">   
+<div class="col-md-3">
+  
     <a href="/venues/new" class="btn btn-lg btn-success">Add a new venue</a>
-  </div>
+</div>
 
 
 
