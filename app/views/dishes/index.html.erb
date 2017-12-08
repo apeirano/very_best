@@ -58,31 +58,40 @@
             </a>
           
           </td>
+        <!-- I include an if to show only the drop down venue when the dish has not a favorite restaurant -->
         
-          <td> 
-          
-        <form action="/create_bookmark" method="post">
-              <!-- Hidden input for authenticity token to protect from forgery -->
-              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-              <!-- Drop down venues -->
-              <%= select_tag(:venue_id, options_from_collection_for_select(Venue.all, :id, :name, @bookmark.venue_id), :class => "form-control") %>
-
-              <!-- Hidden Dish -->
-              <input type="hidden" name="dish_id" value="<%= dish.id %>">
-
-              <!-- Label and input for user_id -->
-              <input type="hidden" name="user_id" value="<%= current_user.id %>">
+        <% if Bookmark.where(:dish_id => dish.id).where(:user_id => current_user.id ).present? %>
         
-              <button class="btn btn-primary btn-sm">
-                <i class="fa fa-heart"></i>
-              </button>
-             
-            </form>
-          
-          
-          </td>
-          <td>
+            <td> <%= Venue.where(:id => (Bookmark.where(:dish_id => dish.id).where(:user_id => current_user.id ).last.venue_id)).last.name  %>  </td>
+            
+        <% else %>
+        
+            <td> 
+            
+            <form action="/create_bookmark" method="post">
+                  <!-- Hidden input for authenticity token to protect from forgery -->
+                  <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+    
+                  <!-- Drop down venues -->
+                  <%= select_tag(:venue_id, options_from_collection_for_select(Venue.all, :id, :name, @bookmark.venue_id), :class => "form-control") %>
+    
+                  <!-- Hidden Dish -->
+                  <input type="hidden" name="dish_id" value="<%= dish.id %>">
+    
+                  <!-- Label and input for user_id -->
+                  <input type="hidden" name="user_id" value="<%= current_user.id %>">
+            
+                  <button class="btn btn-primary btn-sm">
+                    <i class="fa fa-heart"></i>
+                  </button>
+                 
+                </form>
+            </td>
+            
+            
+            <% end %>
+            
+              <td>
             <span class="label label-primary">
             <% if dish.cuisine.present? %>
               <%= dish.cuisine.name %>
