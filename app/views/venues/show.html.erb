@@ -27,9 +27,9 @@
           <li class="list-group-item list-group-item-success">
             <p>
               Dishes you loved here
-                </li>
+                
                   <% @user_bookmarks.each do |bookmark| %>
-                    <li class="list-group-item">
+                    <class="list-group-item">
                       <a href="/venues/<%= bookmark.dish.id %>">
                       <%= bookmark.dish.name %>
                   
@@ -46,6 +46,7 @@
 
                   <% end %>
             </p>
+            </li>
 
 <!-- Dropdown to add a bookmark -->
 
